@@ -1,4 +1,4 @@
-package com.example.gid.ui.theme
+ package com.example.gid.ui.theme
 
 import android.app.Activity
 import android.os.Build
