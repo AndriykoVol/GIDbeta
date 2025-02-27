@@ -11,10 +11,12 @@ import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen() {
-    val auth = FirebaseAuth.getInstance() // Отримуємо екземпляр FirebaseAuth
+    val auth = FirebaseAuth.getInstance()
 
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
+
+    Log.d("MyLog", "Current user: ${auth.currentUser?.email}")
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -34,20 +36,48 @@ fun LoginScreen() {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Button(onClick = {
+            signIn(auth, emailState.value, passwordState.value)
+        }) {
+            Text(text = "Sign In")
+        }
+        Button(onClick = {
             signUp(auth, emailState.value, passwordState.value)
         }) {
             Text(text = "Sign Up")
         }
+        Button(onClick = {
+            signOut(auth)
+        }) {
+            Text(text = "Sign Out")
+        }
     }
 }
+
+
 
 private fun signUp(auth: FirebaseAuth, email: String, password: String) {
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("MyLog", "User created successfully: ${auth.currentUser?.email}")
+                Log.d("MyLog", "Sign up successfully: ${auth.currentUser?.email}")
             } else {
-                Log.d("MyLog", "User creation failed: ${task.exception?.message}")
+                Log.d("MyLog", "Sign up failed: ${task.exception?.message}")
             }
         }
 }
+
+private fun signIn(auth: FirebaseAuth, email: String, password: String) {
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("MyLog", "Sign in successfully: ${auth.currentUser?.email}")
+            } else {
+                Log.d("MyLog", "Sign in failed: ${task.exception?.message}")
+            }
+        }
+}
+
+private fun signOut(auth: FirebaseAuth) {
+    auth.signOut()
+}
+
