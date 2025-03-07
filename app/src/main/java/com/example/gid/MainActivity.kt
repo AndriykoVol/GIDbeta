@@ -11,16 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.gid.ui.theme.GIDTheme
-import com.example.gid.ui.theme.login.LoginScreen
-import com.google.firebase.FirebaseApp
+import com.example.gid.ui.theme.main_screen.MainScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this) // Должно быть перед использованием FirebaseAuth
         setContent {
-            LoginScreen()
+            MainScreen()
         }
     }
 }
