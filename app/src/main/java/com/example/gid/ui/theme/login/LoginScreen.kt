@@ -12,9 +12,15 @@ import androidx.compose.ui.res.painterResource
 import com.example.gid.R
 import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+
 
 @Composable
 fun LoginScreen() {
+    val auth = remember { FirebaseAuth.getInstance() }
+
+    val errorState = remember { mutableStateOf("") }
 
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
@@ -40,26 +46,109 @@ fun LoginScreen() {
 
         RoundedCornerTextField(
             text = emailState.value,
-            label = "Email",
+            label = "Пошта",
             onValueChange = { emailState.value = it }
         )
         Spacer(modifier = Modifier.height(15.dp))
 
         RoundedCornerTextField(
             text = passwordState.value,
-            label = "Password",
+            label = "Пароль(мін. 9 символів)",
             onValueChange = { passwordState.value = it }
         )
         Spacer(modifier = Modifier.height(15.dp))
-        Button(onClick = {
-
-        }) {
-            Text(text = "Sign In")
+        if (errorState.value.isNotEmpty()) {
+            Text(
+                text = errorState.value,
+                color = Color.Red,
+                fontSize = 20.sp
+            )
         }
         Button(onClick = {
-
+            signIn(
+                auth = auth,
+                email = emailState.value,
+                password = passwordState.value,
+                onSignInSuccess = {
+                    Log.d("MyLog", "Потужно")
+                },
+                onSignInFailed = { error ->
+                    errorState.value = error
+                }
+            )
         }) {
-            Text(text = "Sign Up")
+            LoginButton(text = "Увійти")
+        }
+        Spacer(modifier = Modifier.height(15.dp))
+        Button(onClick = {
+            signUp(
+                auth = auth,
+                email = emailState.value,
+                password = passwordState.value,
+                onSignUpSuccess = {
+                    Log.d("MyLog", "Потужно")
+                },
+                onSignUpFailed = { error ->
+                    errorState.value = error
+                }
+            )
+        }) {
+            LoginButton(text = "Зареєструватися")
         }
     }
+}
+
+@Composable
+fun LoginButton(text: String) {
+    Text(text = text)
+}
+
+fun signUp(
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    onSignUpSuccess: () -> Unit,
+    onSignUpFailed: (String) -> Unit
+) {
+    if (email.isEmpty() || password.isEmpty()) {
+        onSignUpFailed("СОСАВ?")
+        return
+    }
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                onSignUpSuccess()
+            } else {
+                onSignUpFailed(task.exception?.message ?: "Помилка реєстрації")
+            }
+        }
+        .addOnFailureListener { exception ->
+            onSignUpFailed(exception.message ?: "Помилка реєстрації")
+        }
+}
+
+fun signIn(
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    onSignInSuccess: () -> Unit,
+    onSignInFailed: (String) -> Unit
+) {
+    if (email.isEmpty() || password.isEmpty()) {
+        onSignInFailed("Заповніть всі поля")
+        return
+    }
+
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                onSignInSuccess()
+            } else {
+                onSignInFailed(task.exception?.message ?: "Помилка входу")
+            }
+        }
+        .addOnFailureListener { exception ->
+            onSignInFailed(exception.message ?: "Помилка входу")
+        }
 }

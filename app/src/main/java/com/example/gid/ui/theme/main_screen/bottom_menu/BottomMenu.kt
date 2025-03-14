@@ -8,10 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.gid.R
+
 
 
 @Composable
-fun BottomMenu() {
+fun BottomMenu(navController: NavController) {
     val items = listOf(
         BottomMenuItem.Home,
         BottomMenuItem.Map,
@@ -22,9 +26,10 @@ fun BottomMenu() {
     NavigationBar {
         items.forEach { item ->
             NavigationBarItem(
-                selected = selectedItem.value == item.title,
+                selected = selectedItem.value == item.route,
                 onClick = {
-                    selectedItem.value = item.title
+                    selectedItem.value = item.route
+                    navController.navigate(item.route)
                 },
                 icon = {
                     Icon(painter = painterResource(id =  item.iconId),
