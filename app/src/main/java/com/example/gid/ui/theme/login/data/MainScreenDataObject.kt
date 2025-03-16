@@ -2,6 +2,8 @@ package com.example.gid.ui.theme.login.data
 
 import kotlinx.serialization.Serializable
 
-
 @Serializable
-class LoginScreenObject
+data class MainScreenDataObject(
+    val uid: String = "",
+    val email: String = "",
+)

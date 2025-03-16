@@ -14,10 +14,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import com.example.gid.ui.theme.login.data.MainScreenDataObject
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onNavigateToMainScreen: (MainScreenDataObject) -> Unit
+) {
     val auth = remember { FirebaseAuth.getInstance() }
 
     val errorState = remember { mutableStateOf("") }
@@ -69,8 +72,8 @@ fun LoginScreen() {
                 auth = auth,
                 email = emailState.value,
                 password = passwordState.value,
-                onSignInSuccess = {
-                    Log.d("MyLog", "Потужно")
+                onSignInSuccess = { navData ->
+                    onNavigateToMainScreen(navData)
                 },
                 onSignInFailed = { error ->
                     errorState.value = error
@@ -85,8 +88,8 @@ fun LoginScreen() {
                 auth = auth,
                 email = emailState.value,
                 password = passwordState.value,
-                onSignUpSuccess = {
-                    Log.d("MyLog", "Потужно")
+                onSignUpSuccess = { navData ->
+                    onNavigateToMainScreen(navData)
                 },
                 onSignUpFailed = { error ->
                     errorState.value = error
@@ -107,20 +110,23 @@ fun signUp(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignUpSuccess: () -> Unit,
+    onSignUpSuccess: (MainScreenDataObject) -> Unit,
     onSignUpFailed: (String) -> Unit
 ) {
     if (email.isEmpty() || password.isEmpty()) {
-        onSignUpFailed("СОСАВ?")
+        onSignUpFailed("Заповніть всі поля")
         return
     }
 
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                onSignUpSuccess()
-            } else {
-                onSignUpFailed(task.exception?.message ?: "Помилка реєстрації")
+                onSignUpSuccess(
+                    MainScreenDataObject(
+                        task.result.user?.uid!!,
+                        task.result.user?.email!!
+                    )
+                )
             }
         }
         .addOnFailureListener { exception ->
@@ -132,7 +138,7 @@ fun signIn(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignInSuccess: () -> Unit,
+    onSignInSuccess: (MainScreenDataObject) -> Unit,
     onSignInFailed: (String) -> Unit
 ) {
     if (email.isEmpty() || password.isEmpty()) {
@@ -143,9 +149,12 @@ fun signIn(
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                onSignInSuccess()
-            } else {
-                onSignInFailed(task.exception?.message ?: "Помилка входу")
+                onSignInSuccess(
+                    MainScreenDataObject(
+                        task.result.user?.uid!!,
+                        task.result.user?.email!!
+                    )
+                )
             }
         }
         .addOnFailureListener { exception ->

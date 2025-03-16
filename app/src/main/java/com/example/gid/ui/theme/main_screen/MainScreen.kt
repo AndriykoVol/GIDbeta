@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavController) {  
+fun MainScreen(navController: NavController, navData: String?) {
     val drawerState = rememberDrawerState(DrawerValue.Open)
     ModalNavigationDrawer(
         drawerState = drawerState,
