@@ -11,9 +11,7 @@ import com.example.gid.ui.theme.login.LoginScreen
 import com.example.gid.ui.theme.login.data.LoginScreenObject
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.gid.ui.theme.login.data.MainScreenDataObject
 import com.example.gid.ui.theme.main_screen.MainScreen
-
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("WrongStartDestinationType")
@@ -35,12 +33,9 @@ class MainActivity : ComponentActivity() {
                     route = "main_screen/{navData}",
                     arguments = listOf(navArgument("navData") { type = NavType.StringType })
                 ) { backStackEntry ->
-                    val navData = backStackEntry.arguments?.getString("navData")
-                    MainScreen(navController, navData)
+                    MainScreen()
                 }
             }
         }
     }
 }
-
-

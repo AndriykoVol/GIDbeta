@@ -9,17 +9,17 @@ sealed class BottomMenuItem(
 
 ) {
     object Home : BottomMenuItem(
-        title = "Home",
+        title = "Дім",
         route = "home",
         iconId = R.drawable.ic_home
     )
     object Map : BottomMenuItem(
-        title = "Map",
+        title = "Мапа",
         route = "map",
         iconId = R.drawable.ic_map
     )
     object Settings : BottomMenuItem(
-        title = "Settings",
+        title = "Налаштування",
         route = "settings",
         iconId = R.drawable.ic_settings
     )

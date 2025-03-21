@@ -1,18 +1,16 @@
 package com.example.gid.ui.theme.main_screen.bottom_menu
 
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.example.gid.R
-
-
 
 @Composable
 fun BottomMenu(navController: NavController) {
@@ -21,25 +19,39 @@ fun BottomMenu(navController: NavController) {
         BottomMenuItem.Map,
         BottomMenuItem.Settings
     )
-    val selectedItem = remember { mutableStateOf("home") }
+
+    val currentDestination = navController.currentDestination
 
     NavigationBar {
         items.forEach { item ->
+            val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationBarItem(
-                selected = selectedItem.value == item.route,
+                selected = isSelected,
                 onClick = {
-                    selectedItem.value = item.route
-                    navController.navigate(item.route)
+                    navController.navigate(item.route) {
+                        popUpTo("home") {
+                            inclusive = false
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 icon = {
-                    Icon(painter = painterResource(id =  item.iconId),
-                        contentDescription = null  )
+                    Icon(
+                        painter = painterResource(id = item.iconId),
+                        contentDescription = null,
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray
+                    )
                 },
                 label = {
-                    Text(text = item.title)
+                    Text(
+                        text = item.title,
+                        modifier = Modifier.padding(top = 4.dp),
+                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray
+                    )
                 }
             )
         }
     }
- }
-
+}
