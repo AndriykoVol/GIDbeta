@@ -48,6 +48,10 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.5.0")
     val nav_version = "2.8.9"
 
+    implementation ("com.google.maps.android:maps-compose:2.11.4")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation(libs.androidx.navigation.compose)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")

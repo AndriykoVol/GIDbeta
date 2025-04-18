@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
 
     <application
@@ -15,6 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GID"
         tools:targetApi="33">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBRJq16N-lHLnT5PIVk0cHsmZnaO1FDO6w" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
