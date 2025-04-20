@@ -48,6 +48,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.5.0")
     val nav_version = "2.8.9"
 
+    implementation ("androidx.compose.material:material-icons-core:1.5.4")
+    implementation ("androidx.compose.material:material-icons-extended:1.5.4")
+
     implementation ("com.google.maps.android:maps-compose:2.11.4")
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("com.google.android.gms:play-services-location:21.0.1")

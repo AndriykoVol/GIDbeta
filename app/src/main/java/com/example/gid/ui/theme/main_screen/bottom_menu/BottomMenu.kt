@@ -22,7 +22,10 @@ fun BottomMenu(navController: NavController) {
 
     val currentDestination = navController.currentDestination
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = Color(0xFF0D47A1), // Темно-синій фон меню
+        tonalElevation = 8.dp
+    ) {
         items.forEach { item ->
             val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
             NavigationBarItem(
@@ -41,14 +44,14 @@ fun BottomMenu(navController: NavController) {
                     Icon(
                         painter = painterResource(id = item.iconId),
                         contentDescription = null,
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray
+                        tint = if (isSelected) Color.Yellow else Color.White
                     )
                 },
                 label = {
                     Text(
                         text = item.title,
                         modifier = Modifier.padding(top = 4.dp),
-                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray
+                        color = if (isSelected) Color.Yellow else Color.White
                     )
                 }
             )

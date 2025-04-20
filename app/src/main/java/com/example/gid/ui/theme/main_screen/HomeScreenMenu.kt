@@ -17,10 +17,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,15 +42,22 @@ import com.example.gid.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenMenu() {
-    // Custom color scheme
-    val primaryBlue = Color(0xFF1565C0)
-    val secondaryOrange = Color(0xFFFF8F00)
-    val backgroundColor = Color(0xFFF5F7FA)
-    val cardBackground = Color.White
+    // Minimalist dark blue and white color scheme
+    val darkBlue = Color(0xFF0A2342)
+    val midBlue = Color(0xFF173B66)
+    val lightBlue = Color(0xFF2C5282)
+    val accentBlue = Color(0xFF4299E1)
+    val pureWhite = Color(0xFFFFFFFF)
+    val softWhite = Color(0xFFF0F4F8)
+    val darkBackground = Color(0xFF091428)
+    val cardBackground = Color(0xFF102040)
 
     var showProfileDetails by remember { mutableStateOf(true) }
+    var showEditProfileDialog by remember { mutableStateOf(false) }
+    var profileName by remember { mutableStateOf("Андрій Волинець") }
+    var profileDescription by remember { mutableStateOf("Досвідчений турист") }
 
-    Surface(modifier = Modifier.fillMaxSize(), color = backgroundColor) {
+    Surface(modifier = Modifier.fillMaxSize(), color = darkBackground) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,14 +77,14 @@ fun HomeScreenMenu() {
                     style = TextStyle(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = primaryBlue
+                        color = pureWhite
                     )
                 )
                 IconButton(onClick = { showProfileDetails = !showProfileDetails }) {
                     Icon(
-                        imageVector = Icons.Default.Star,
+                        imageVector = Icons.Default.Menu,
                         contentDescription = "Toggle profile",
-                        tint = secondaryOrange
+                        tint = pureWhite
                     )
                 }
             }
@@ -92,7 +99,7 @@ fun HomeScreenMenu() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
-                        .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                        .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
                     colors = CardDefaults.cardColors(
                         containerColor = cardBackground
                     ),
@@ -104,7 +111,7 @@ fun HomeScreenMenu() {
                             .height(180.dp)
                             .background(
                                 brush = Brush.verticalGradient(
-                                    colors = listOf(primaryBlue, primaryBlue.copy(alpha = 0.7f))
+                                    colors = listOf(midBlue, darkBlue)
                                 )
                             )
                     ) {
@@ -114,22 +121,39 @@ fun HomeScreenMenu() {
                                 .padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.tourist),
-                                contentDescription = "Фото профілю",
-                                modifier = Modifier
-                                    .size(90.dp)
-                                    .clip(CircleShape)
-                                    .border(width = 2.dp, color = Color.White, shape = CircleShape)
-                            )
+                            Box(contentAlignment = Alignment.BottomEnd) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.tourist),
+                                    contentDescription = "Фото профілю",
+                                    modifier = Modifier
+                                        .size(90.dp)
+                                        .clip(CircleShape)
+                                        .border(width = 2.dp, color = pureWhite, shape = CircleShape)
+                                )
+
+                                IconButton(
+                                    onClick = { showEditProfileDialog = true },
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .background(accentBlue, CircleShape)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Edit,
+                                        contentDescription = "Edit Profile",
+                                        tint = pureWhite,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            }
+
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Андрій Волинець",
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                text = profileName,
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = pureWhite)
                             )
                             Text(
-                                text = "Досвідчений турист",
-                                style = TextStyle(fontSize = 16.sp, color = Color.White.copy(alpha = 0.9f))
+                                text = profileDescription,
+                                style = TextStyle(fontSize = 16.sp, color = softWhite.copy(alpha = 0.9f))
                             )
                         }
                     }
@@ -141,12 +165,12 @@ fun HomeScreenMenu() {
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
                         val stats = listOf(
-                            Triple("75", "Друзів", Icons.Default.Star),
+                            Triple("75", "Друзів", Icons.Default.Person),
                             Triple("234", "Вподобання", Icons.Default.Favorite),
                             Triple("141", "Місць", Icons.Default.LocationOn)
                         )
                         stats.forEach { (number, label, icon) ->
-                            StatisticItem(number = number, label = label, icon = icon, primaryColor = primaryBlue)
+                            StatisticItem(number = number, label = label, icon = icon, primaryColor = accentBlue, textColor = pureWhite)
                         }
                     }
                 }
@@ -156,7 +180,8 @@ fun HomeScreenMenu() {
             SectionHeader(
                 title = "Рекомендовані місця",
                 subtitle = "Топові місця для відвідування",
-                primaryColor = primaryBlue
+                primaryColor = accentBlue,
+                textColor = pureWhite
             )
 
             val featuredPlaces = listOf(
@@ -173,8 +198,10 @@ fun HomeScreenMenu() {
                 items(featuredPlaces) { place ->
                     FeaturedPlaceCard(
                         place = place,
-                        primaryColor = primaryBlue,
-                        secondaryColor = secondaryOrange
+                        primaryColor = midBlue,
+                        accentColor = accentBlue,
+                        backgroundColor = cardBackground,
+                        textColor = pureWhite
                     )
                 }
             }
@@ -183,7 +210,8 @@ fun HomeScreenMenu() {
             SectionHeader(
                 title = "Місця поблизу",
                 subtitle = "Дослідіть свій район",
-                primaryColor = primaryBlue
+                primaryColor = accentBlue,
+                textColor = pureWhite
             )
 
             val nearbyPlaces = listOf(
@@ -201,17 +229,78 @@ fun HomeScreenMenu() {
                 items(nearbyPlaces) { place ->
                     NearbyPlaceCard(
                         place = place,
-                        primaryColor = primaryBlue,
-                        secondaryColor = secondaryOrange
+                        primaryColor = midBlue,
+                        accentColor = accentBlue,
+                        backgroundColor = cardBackground,
+                        textColor = pureWhite
                     )
                 }
             }
         }
     }
+
+    // Edit Profile Dialog
+    if (showEditProfileDialog) {
+        var nameInput by remember { mutableStateOf(profileName) }
+        var descriptionInput by remember { mutableStateOf(profileDescription) }
+
+        AlertDialog(
+            onDismissRequest = { showEditProfileDialog = false },
+            title = { Text("Редагувати профіль", color = darkBlue) },
+            containerColor = softWhite,
+            titleContentColor = darkBlue,
+            text = {
+                Column {
+                    TextField(
+                        value = nameInput,
+                        onValueChange = { nameInput = it },
+                        label = { Text("Ім'я") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = midBlue,
+                            containerColor = softWhite
+                        )
+                    )
+
+                    TextField(
+                        value = descriptionInput,
+                        onValueChange = { descriptionInput = it },
+                        label = { Text("Опис") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        colors = TextFieldDefaults.textFieldColors(
+                            focusedIndicatorColor = midBlue,
+                            containerColor = softWhite
+                        )
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        profileName = nameInput
+                        profileDescription = descriptionInput
+                        showEditProfileDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = midBlue)
+                ) {
+                    Text("Зберегти")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditProfileDialog = false }) {
+                    Text("Скасувати", color = midBlue)
+                }
+            }
+        )
+    }
 }
 
 @Composable
-fun StatisticItem(number: String, label: String, icon: ImageVector, primaryColor: Color) {
+fun StatisticItem(number: String, label: String, icon: ImageVector, primaryColor: Color, textColor: Color) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(8.dp)
@@ -225,25 +314,31 @@ fun StatisticItem(number: String, label: String, icon: ImageVector, primaryColor
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = number,
-            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.DarkGray)
+            style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold, color = textColor)
         )
         Text(
             text = label,
-            style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+            style = TextStyle(fontSize = 14.sp, color = textColor.copy(alpha = 0.7f))
         )
     }
 }
 
 @Composable
-fun SectionHeader(title: String, subtitle: String, primaryColor: Color) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+fun SectionHeader(title: String, subtitle: String, primaryColor: Color, textColor: Color) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
         Text(
             text = title,
-            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = textColor),
+            modifier = Modifier.fillMaxWidth()
         )
         Text(
             text = subtitle,
-            style = TextStyle(fontSize = 14.sp, color = primaryColor)
+            style = TextStyle(fontSize = 14.sp, color = primaryColor),
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -256,7 +351,13 @@ data class Place(
 )
 
 @Composable
-fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
+fun FeaturedPlaceCard(
+    place: Place,
+    primaryColor: Color,
+    accentColor: Color,
+    backgroundColor: Color,
+    textColor: Color
+) {
     var isFavorite by remember { mutableStateOf(false) }
 
     Card(
@@ -267,7 +368,7 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
             .clickable { },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Column {
             Box(
@@ -288,12 +389,12 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                         .size(32.dp)
-                        .background(Color.White.copy(alpha = 0.7f), CircleShape)
+                        .background(Color.White.copy(alpha = 0.2f), CircleShape)
                 ) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = "Favorite",
-                        tint = if (isFavorite) secondaryColor else Color.Gray,
+                        tint = if (isFavorite) Color.Red else Color.White,
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -316,7 +417,7 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = place.rating.toString(),
-                        style = TextStyle(fontSize = 12.sp, color = Color.White)
+                        style = TextStyle(fontSize = 12.sp, color = textColor)
                     )
                 }
             }
@@ -328,7 +429,7 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
             ) {
                 Text(
                     text = place.name,
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold, color = textColor),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -339,13 +440,13 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
                     Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
-                        tint = primaryColor,
+                        tint = accentColor,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = place.location,
-                        style = TextStyle(fontSize = 14.sp, color = Color.Gray)
+                        style = TextStyle(fontSize = 14.sp, color = textColor.copy(alpha = 0.7f))
                     )
                 }
 
@@ -355,7 +456,7 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = primaryColor
+                        containerColor = accentColor
                     ),
                     contentPadding = PaddingValues(vertical = 6.dp)
                 ) {
@@ -367,7 +468,13 @@ fun FeaturedPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) 
 }
 
 @Composable
-fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
+fun NearbyPlaceCard(
+    place: Place,
+    primaryColor: Color,
+    accentColor: Color,
+    backgroundColor: Color,
+    textColor: Color
+) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -376,7 +483,7 @@ fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
             .clickable { },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Row {
             Image(
@@ -395,7 +502,7 @@ fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
             ) {
                 Text(
                     text = place.name,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
+                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = textColor),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -408,13 +515,13 @@ fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
                     Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
-                        tint = primaryColor,
+                        tint = accentColor,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
                         text = place.location,
-                        style = TextStyle(fontSize = 12.sp, color = Color.Gray)
+                        style = TextStyle(fontSize = 12.sp, color = textColor.copy(alpha = 0.7f))
                     )
                 }
 
@@ -426,13 +533,13 @@ fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = null,
-                        tint = secondaryColor,
+                        tint = Color.Yellow,
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
                         text = place.rating.toString(),
-                        style = TextStyle(fontSize = 12.sp, color = Color.Gray)
+                        style = TextStyle(fontSize = 12.sp, color = textColor.copy(alpha = 0.7f))
                     )
                 }
 
@@ -440,7 +547,7 @@ fun NearbyPlaceCard(place: Place, primaryColor: Color, secondaryColor: Color) {
 
                 Text(
                     text = "Детальніше →",
-                    style = TextStyle(fontSize = 12.sp, color = primaryColor, fontWeight = FontWeight.Medium),
+                    style = TextStyle(fontSize = 12.sp, color = accentColor, fontWeight = FontWeight.Medium),
                     modifier = Modifier.align(Alignment.End)
                 )
             }

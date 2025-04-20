@@ -26,10 +26,13 @@ fun LoginScreen(
     val errorState = remember { mutableStateOf("") }
 
     val emailState = remember { mutableStateOf("") }
+
     val passwordState = remember { mutableStateOf("") }
 
+    val white = Color(0xFFFDFDFD)
+
     Image(
-        painter = painterResource(id = R.drawable.background),
+        painter = painterResource(id = R.drawable.fon),
         contentDescription = "Background",
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop
@@ -40,11 +43,6 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo"
-        )
-
         Spacer(modifier = Modifier.height(15.dp))
 
         RoundedCornerTextField(
@@ -81,6 +79,7 @@ fun LoginScreen(
             )
         }) {
             LoginButton(text = "Увійти")
+
         }
         Spacer(modifier = Modifier.height(15.dp))
         Button(onClick = {

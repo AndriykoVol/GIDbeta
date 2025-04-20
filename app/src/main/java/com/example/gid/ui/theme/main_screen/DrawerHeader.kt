@@ -29,7 +29,7 @@ fun DrawerHeader() {
     ) {
         Image(
             modifier = Modifier.size(100.dp),
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.gid),
             contentDescription = "Logo"
         )
         Spacer(modifier = Modifier.height(10.dp))
