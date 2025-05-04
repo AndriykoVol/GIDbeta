@@ -20,9 +20,10 @@ import com.example.gid.R
 
 @Composable
 fun DrawerBody() {
-    val darkBlue = Color(0xFF0D1B2A)
-    val white = Color(0xFFFDFDFD)
-    val dividerColor = Color(0xFF1B263B)
+    val darkBlue =  Color(0xFF1B3A2F)
+    val green = Color(0xFF88B04B)
+    val white = Color(0xFFFFFFFF)
+    val dividerColor = Color(0xFF4F7751)
 
     val categoriesList = listOf(
         "Мої відгуки",
@@ -36,10 +37,10 @@ fun DrawerBody() {
         .background(darkBlue)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painter = painterResource(id = R.drawable.greenback),
             contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
-            alpha = 0.1f,
+            alpha = 0.5f,
             contentScale = ContentScale.Crop
         )
 
@@ -85,14 +86,14 @@ fun DrawerBody() {
             Button(
                 onClick = { /* handle save action */ },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = white,
+                    containerColor = green,
                     contentColor = darkBlue
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text(text = "Зберегти", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Зберегти", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = white)
             }
 
             Spacer(modifier = Modifier.height(24.dp))

@@ -43,19 +43,19 @@ import com.example.gid.R
 @Composable
 fun HomeScreenMenu() {
     // Minimalist dark blue and white color scheme
-    val darkBlue = Color(0xFF0A2342)
-    val midBlue = Color(0xFF173B66)
-    val lightBlue = Color(0xFF2C5282)
-    val accentBlue = Color(0xFF4299E1)
-    val pureWhite = Color(0xFFFFFFFF)
-    val softWhite = Color(0xFFF0F4F8)
-    val darkBackground = Color(0xFF091428)
-    val cardBackground = Color(0xFF102040)
+    val darkBlue = Color(0xFF1B3A2F)       // Темно-зелений (замість темно-синього)
+    val midBlue = Color(0xFF0F5711)        // Глибокий сіро-зелений
+    val lightBlue = Color(0xFF4F7751)      // Світліший зелений
+    val accentBlue = Color(0xFF88B04B)     // Акцентний зелений (лайм/оливковий)
+    val pureWhite = Color(0xFFFFFFFF)      // Білий без змін
+    val softWhite = Color(0xFFF5F5F5)      // М'який сірий замість білого
+    val darkBackground = Color(0xFF1C1C1C) // Темний сірий для фону
+    val cardBackground = Color(0xFF2E2E2E)
 
     var showProfileDetails by remember { mutableStateOf(true) }
     var showEditProfileDialog by remember { mutableStateOf(false) }
-    var profileName by remember { mutableStateOf("Андрій Волинець") }
-    var profileDescription by remember { mutableStateOf("Досвідчений турист") }
+    var profileName by remember { mutableStateOf("Ваш нікнейм") }
+    var profileDescription by remember { mutableStateOf("Коротки опис про себе") }
 
     Surface(modifier = Modifier.fillMaxSize(), color = darkBackground) {
         Column(
@@ -73,7 +73,7 @@ fun HomeScreenMenu() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "TravelBuddy",
+                    "",
                     style = TextStyle(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -84,7 +84,7 @@ fun HomeScreenMenu() {
                     Icon(
                         imageVector = Icons.Default.Menu,
                         contentDescription = "Toggle profile",
-                        tint = pureWhite
+                        tint = lightBlue
                     )
                 }
             }
@@ -121,7 +121,11 @@ fun HomeScreenMenu() {
                                 .padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Box(contentAlignment = Alignment.BottomEnd) {
+                            Box(
+                                contentAlignment = Alignment.BottomEnd,
+                                modifier = Modifier
+                                    .size(90.dp) // обмежує простір, який займає аватар + кнопка
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.tourist),
                                     contentDescription = "Фото профілю",
@@ -153,7 +157,7 @@ fun HomeScreenMenu() {
                             )
                             Text(
                                 text = profileDescription,
-                                style = TextStyle(fontSize = 16.sp, color = softWhite.copy(alpha = 0.9f))
+                                style = TextStyle(fontSize = 16.sp, color = softWhite)
                             )
                         }
                     }

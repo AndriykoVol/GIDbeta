@@ -18,12 +18,14 @@ import androidx.compose.ui.res.painterResource
 import com.example.gid.R
 
 @Composable
-fun DrawerHeader() {
+fun DrawerHeader()
+{
+    val darkBlue =  Color(0xFF002510)
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .height(170.dp)
-            .background(Grey),
+            .background(darkBlue),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

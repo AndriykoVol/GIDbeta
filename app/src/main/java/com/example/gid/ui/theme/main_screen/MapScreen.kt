@@ -55,14 +55,14 @@ fun MapScreen(navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     // Define color scheme
-    val darkBlue = Color(0xFF0A2342)
-    val midBlue = Color(0xFF173B66)
-    val lightBlue = Color(0xFF2C5282)
-    val accentBlue = Color(0xFF4299E1)
-    val pureWhite = Color(0xFFFFFFFF)
-    val softWhite = Color(0xFFF0F4F8)
-    val darkBackground = Color(0xFF091428)
-    val cardBackground = Color(0xFF102040)
+    val darkBlue = Color(0xFF1B3A2F)       // Темно-зелений (замість темно-синього)
+    val midBlue = Color(0xFF0F5711)        // Глибокий сіро-зелений
+    val lightBlue = Color(0xFF4F7751)      // Світліший зелений
+    val accentBlue = Color(0xFF88B04B)     // Акцентний зелений (лайм/оливковий)
+    val pureWhite = Color(0xFFFFFFFF)      // Білий без змін
+    val softWhite = Color(0xFFF5F5F5)      // М'який сірий замість білого
+    val darkBackground = Color(0xFF1C1C1C) // Темний сірий для фону
+    val cardBackground = Color(0xFF2E2E2E)
 
     // State variables
     var searchQuery by remember { mutableStateOf("") }
@@ -71,42 +71,70 @@ fun MapScreen(navController: NavController) {
             isMyLocationEnabled = false,
             mapStyleOptions = MapStyleOptions("""
                 [
-                  {
-                    "featureType": "all",
-                    "elementType": "geometry",
-                    "stylers": [
-                      { "color": "#0a2342" }
-                    ]
-                  },
-                  {
-                    "featureType": "all",
-                    "elementType": "labels.text.fill",
-                    "stylers": [
-                      { "color": "#ffffff" }
-                    ]
-                  },
-                  {
-                    "featureType": "all",
-                    "elementType": "labels.text.stroke",
-                    "stylers": [
-                      { "color": "#173b66" }
-                    ]
-                  },
-                  {
-                    "featureType": "road",
-                    "elementType": "geometry",
-                    "stylers": [
-                      { "color": "#173b66" }
-                    ]
-                  },
-                  {
-                    "featureType": "water",
-                    "elementType": "geometry",
-                    "stylers": [
-                      { "color": "#091428" }
-                    ]
-                  }
-                ]
+  {
+    "featureType": "all",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#2e3d2f" }  // Темно-зелений/сірий фон
+    ]
+  },
+  {
+    "featureType": "all",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      { "color": "#d5e6d0" }  // Світло-зелений текст
+    ]
+  },
+  {
+    "featureType": "all",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      { "color": "#1e2d24" }  // Темно-сірий обводка
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#4c5c4f" }  // Сірозелений для доріг
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      { "color": "#2a342d" }  // Темна обводка доріг
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#3e4c40" }  // Об’єкти інтересу - сірозелені
+    ]
+  },
+  {
+    "featureType": "landscape",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#394c3e" }  // Земля - зелено-сіра
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#223329" }  // Вода — темно-зелена
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "geometry",
+    "stylers": [
+      { "color": "#3a4b3f" }  // Транспорт - темно-зелено-сірий
+    ]
+  }
+]
             """)
         )
     )}

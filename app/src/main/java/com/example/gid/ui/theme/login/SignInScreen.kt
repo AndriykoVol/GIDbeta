@@ -1,73 +1,34 @@
 package com.example.gid.ui.theme.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gid.R
-import com.example.gid.ui.theme.login.data.LoginScreenObject
 import com.google.firebase.auth.FirebaseAuth
 import com.example.gid.ui.theme.login.data.MainScreenDataObject
+import com.example.gid.ui.theme.login.data.LoginScreenObject
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RoundedCornerTextField(
-    text: String,
-    label: String,
-    onValueChange: (String) -> Unit,
-    isPassword: Boolean = false
-) {
-    val darkGreen = Color(0xFF0A3B20)
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = onValueChange,
-        label = { Text(label, color = Color.White.copy(alpha = 0.8f)) },
-        modifier = Modifier
-            .fillMaxWidth(0.85f)
-            .height(65.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(darkGreen),
-        textStyle = TextStyle(
-            color = Color.White,
-            fontSize = 16.sp
-        ),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White.copy(alpha = 0.7f),
-            cursorColor = Color.White
-        ),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
-    )
-}
 
 @Composable
-fun LoginScreen(
+fun SignInScreen(
     onNavigateToMainScreen: (MainScreenDataObject) -> Unit,
-    onNavigateToSignIn: () -> Unit
-    ) {
+    onNavigateToLogin: () -> Unit
+) {
     val auth = remember { FirebaseAuth.getInstance() }
 
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
-    val confirmPasswordState = remember { mutableStateOf("") }
     val errorState = remember { mutableStateOf("") }
 
     // Define colors
@@ -94,7 +55,7 @@ fun LoginScreen(
         ) {
             // Title
             Text(
-                text = "Реєстрація",
+                text = "Вхід",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -120,16 +81,6 @@ fun LoginScreen(
                 isPassword = true
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Confirm Password Field
-            RoundedCornerTextField(
-                text = confirmPasswordState.value,
-                label = "Підтвердьте пароль",
-                onValueChange = { confirmPasswordState.value = it },
-                isPassword = true
-            )
-
             // Error message if any
             if (errorState.value.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(10.dp))
@@ -142,22 +93,17 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Register Button
+            // Login Button
             Button(
                 onClick = {
-                    if (passwordState.value != confirmPasswordState.value) {
-                        errorState.value = "Паролі не співпадають"
-                        return@Button
-                    }
-
-                    signUp(
+                    signIn(
                         auth = auth,
                         email = emailState.value,
                         password = passwordState.value,
-                        onSignUpSuccess = { navData ->
+                        onSignInSuccess = { navData ->
                             onNavigateToMainScreen(navData)
                         },
-                        onSignUpFailed = { error ->
+                        onSignInFailed = { error ->
                             errorState.value = error
                         }
                     )
@@ -171,7 +117,7 @@ fun LoginScreen(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    text = "Зареєструватися",
+                    text = "Увійти",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -180,9 +126,9 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Already have an account text
+            // Don't have an account text
             Text(
-                text = "Вже є акаунт?",
+                text = "Немає акаунту?",
                 fontSize = 16.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center
@@ -190,9 +136,10 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            TextButton(onClick = onNavigateToSignIn) {
+            // Register link
+            TextButton(onClick = onNavigateToLogin) {
                 Text(
-                    text = "Увійти",
+                    text = "Зареєструватися",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = linkColor
@@ -202,28 +149,23 @@ fun LoginScreen(
     }
 }
 
-// Reuse the sign up function from your original code
-fun signUp(
+// Reuse the sign in function from your original code
+fun signIn(
     auth: FirebaseAuth,
     email: String,
     password: String,
-    onSignUpSuccess: (MainScreenDataObject) -> Unit,
-    onSignUpFailed: (String) -> Unit
+    onSignInSuccess: (MainScreenDataObject) -> Unit,
+    onSignInFailed: (String) -> Unit
 ) {
     if (email.isEmpty() || password.isEmpty()) {
-        onSignUpFailed("Заповніть всі поля")
+        onSignInFailed("Заповніть всі поля")
         return
     }
 
-    if (password.length < 9) {
-        onSignUpFailed("Пароль має бути не менше 9 символів")
-        return
-    }
-
-    auth.createUserWithEmailAndPassword(email, password)
+    auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                onSignUpSuccess(
+                onSignInSuccess(
                     MainScreenDataObject(
                         task.result.user?.uid!!,
                         task.result.user?.email!!
@@ -232,6 +174,6 @@ fun signUp(
             }
         }
         .addOnFailureListener { exception ->
-            onSignUpFailed(exception.message ?: "Помилка реєстрації")
+            onSignInFailed(exception.message ?: "Помилка входу")
         }
 }

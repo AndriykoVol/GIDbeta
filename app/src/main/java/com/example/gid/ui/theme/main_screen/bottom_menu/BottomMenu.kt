@@ -23,7 +23,7 @@ fun BottomMenu(navController: NavController) {
     val currentDestination = navController.currentDestination
 
     NavigationBar(
-        containerColor = Color(0xFF0D47A1), // Темно-синій фон меню
+        containerColor = Color(0xFF002510),
         tonalElevation = 8.dp
     ) {
         items.forEach { item ->
